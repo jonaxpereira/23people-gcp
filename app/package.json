@@ -1,0 +1,25 @@
+{
+  "name": "ccn-movimientos-inventario",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node build/src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.2.5",
+    "typescript": "^5.1.3"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "pg": "^8.11.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.32.0"
+  }
+}
