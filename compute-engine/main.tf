@@ -36,7 +36,10 @@ resource "google_compute_instance" "compute_instance_bastion" {
     foo = "bar"
   }
 
-  metadata_startup_script = "echo hi > /test.txt"
+  metadata_startup_script = <<-EOF1
+      #! /bin/bash
+      echo hi > /test.txt
+    EOF1
 
   service_account {
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.

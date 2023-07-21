@@ -31,3 +31,70 @@ resource "google_container_node_pool" "people_preemptible_nodes" {
     ]
   }
 }
+
+data "google_client_config" "current" {}
+
+provider "kubernetes" {
+  host                   = "https://${google_container_cluster.people_gke_cluster.endpoint}"
+  cluster_ca_certificate = base64decode(google_container_cluster.people_gke_cluster.master_auth.0.cluster_ca_certificate)
+  token                  = data.google_client_config.current.access_token
+}
+
+resource "kubernetes_namespace" "staging" {
+  metadata {
+    name = "staging"
+  }
+}
+resource "google_compute_address" "default" {
+  name   = "lb7-gke-ip"
+  region = "us-central1"
+}
+resource "kubernetes_service" "nginx" {
+  metadata {
+    namespace = kubernetes_namespace.staging.metadata[0].name
+    name      = "nginx"
+  }
+  spec {
+    selector = {
+      run = "nginx"
+    }
+    session_affinity = "ClientIP"
+    port {
+      protocol    = "TCP"
+      port        = 80
+      target_port = 80
+    }
+    type             = "LoadBalancer"
+    load_balancer_ip = google_compute_address.default.address
+  }
+}
+resource "kubernetes_replication_controller" "nginx" {
+  metadata {
+    name      = "nginx"
+    namespace = kubernetes_namespace.staging.metadata[0].name
+    labels = {
+      run = "nginx"
+    }
+  }
+  spec {
+    selector = {
+      run = "nginx"
+    }
+    template {
+      metadata {
+        labels = {
+          run = "nginx"
+        }
+      }
+      spec {
+        container {
+          image = "nginx:latest"
+          name  = "nginx"
+        }
+      }
+    }
+  }
+}
+output "load-balancer-ip" {
+  value = google_compute_address.default.address
+}
