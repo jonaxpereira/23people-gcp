@@ -1,18 +1,14 @@
 import { sequelize } from '../db/Connection';
 const { DataTypes } = require('sequelize');
 
-export const Materiales = sequelize.define('materiales', {
+export const Heroes = sequelize.define('heroes', {
   // Model attributes are defined here
-  nro_material: {
+  hero_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     primaryKey: true
   },
-  unidad_medida_base: {
-    type: DataTypes.STRING,
-    allowNull: false
-  },
-  nombre: {
+  name: {
     type: DataTypes.STRING,
     allowNull: false
   }
