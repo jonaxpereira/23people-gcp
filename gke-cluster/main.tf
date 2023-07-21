@@ -95,6 +95,18 @@ resource "kubernetes_replication_controller" "nginx" {
     }
   }
 }
-output "load-balancer-ip" {
-  value = google_compute_address.default.address
+
+resource "google_dns_managed_zone" "dns_jonaxpereira" {
+  name     = "jonaxpereira-dns-zone"
+  dns_name = "jonaxpereira.com."
 }
+
+resource "google_dns_record_set" "a" {
+  name         = "${google_dns_managed_zone.dns_jonaxpereira.dns_name}"
+  managed_zone = google_dns_managed_zone.dns_jonaxpereira.name
+  type         = "A"
+  ttl          = 300
+
+  rrdatas = [google_compute_address.default.address]
+}
+
