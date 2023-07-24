@@ -1,4 +1,4 @@
-FROM node as builder
+FROM --platform=linux/amd64 node as builder
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run build
 
-FROM node:slim
+FROM --platform=linux/amd64 node:slim
 
 ENV NODE_ENV production
 USER node
@@ -27,5 +27,5 @@ RUN npm ci --production
 
 COPY --from=builder /usr/src/app/build ./build
 
-EXPOSE 3000
+EXPOSE 8080
 CMD [ "npm", "start" ]

@@ -6,7 +6,7 @@ import { Heroes } from './models/heroes';
     sequelize.authenticate();
     const app: Express = express();
     app.use(express.json());
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 8080;
 
     app.get('/heroes', async (req: Request, res: Response) => {
         const result = await Heroes.findAll();
